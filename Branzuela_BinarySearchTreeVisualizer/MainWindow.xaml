@@ -1,0 +1,26 @@
+﻿<Window x:Class="Branzuela_BinarySearchTreeVisualizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Branzuela_BinarySearchTreeVisualizer"
+        mc:Ignorable="d"
+        WindowState="Maximized"
+        WindowStyle="SingleBorderWindow"
+        Title="MainWindow" Height="1080" Width="1920">
+    <Grid x:Name="mainGrid">
+        <Canvas 
+            x:Name="cnvTree"
+            HorizontalAlignment="Center" Margin="2,127,-0.4,0.4" Width="1912" 
+            Background="White"/>
+        <Button Content="btnReset" HorizontalAlignment="Left" Margin="113,74,0,0" VerticalAlignment="Top" Width="75" Click="btnReset"/>
+        <TextBox x:Name="tbMaticTree" HorizontalAlignment="Left" Height="23" Margin="376,26,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="507"/>
+        <Button x:Name="btnMatic" Content="DrawLeaf Tree!" HorizontalAlignment="Left" Margin="376,73,0,0" IsDefault="True" VerticalAlignment="Top" Width="113" Click="BtnMatic_Click"/>
+        <Button x:Name="tbBalance" Content="Balance" HorizontalAlignment="Left" Margin="538,73,0,0" VerticalAlignment="Top" Width="75" Click="TbBalance_Click"/>
+        <Button x:Name="tbDelMerging" Content="DeleteMerging" HorizontalAlignment="Left" Margin="685,73,0,0" VerticalAlignment="Top" Width="101" Click="TbDelMerging_Click"/>
+        <Button x:Name="tbGetParent" Content="Get Parent" HorizontalAlignment="Left" Margin="808,74,0,0" VerticalAlignment="Top" Width="75" Click="TbGetParent_Click"/>
+        <RadioButton x:Name="rbString" Content="String" HorizontalAlignment="Left" Margin="942,26,0,0" VerticalAlignment="Top" Checked="RbString_Checked"/>
+        <RadioButton x:Name="rbIntegers" Content="Integers" HorizontalAlignment="Left" Margin="942,47,0,0" VerticalAlignment="Top" Checked="RbIntegers_Checked"/>
+
+    </Grid>
+</Window>
