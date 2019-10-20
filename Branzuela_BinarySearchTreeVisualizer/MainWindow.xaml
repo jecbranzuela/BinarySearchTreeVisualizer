@@ -11,16 +11,50 @@
     <Grid x:Name="mainGrid">
         <Canvas 
             x:Name="cnvTree"
-            HorizontalAlignment="Center" Margin="2,127,-0.4,0.4" Width="1912" 
-            Background="White"/>
-        <Button Content="btnReset" HorizontalAlignment="Left" Margin="113,74,0,0" VerticalAlignment="Top" Width="75" Click="btnReset"/>
-        <TextBox x:Name="tbMaticTree" HorizontalAlignment="Left" Height="23" Margin="376,26,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="507"/>
-        <Button x:Name="btnMatic" Content="DrawLeaf Tree!" HorizontalAlignment="Left" Margin="376,73,0,0" IsDefault="True" VerticalAlignment="Top" Width="113" Click="BtnMatic_Click"/>
-        <Button x:Name="tbBalance" Content="Balance" HorizontalAlignment="Left" Margin="538,73,0,0" VerticalAlignment="Top" Width="75" Click="TbBalance_Click"/>
-        <Button x:Name="tbDelMerging" Content="DeleteMerging" HorizontalAlignment="Left" Margin="685,73,0,0" VerticalAlignment="Top" Width="101" Click="TbDelMerging_Click"/>
-        <Button x:Name="tbGetParent" Content="Get Parent" HorizontalAlignment="Left" Margin="808,74,0,0" VerticalAlignment="Top" Width="75" Click="TbGetParent_Click"/>
-        <RadioButton x:Name="rbString" Content="String" HorizontalAlignment="Left" Margin="942,26,0,0" VerticalAlignment="Top" Checked="RbString_Checked"/>
-        <RadioButton x:Name="rbIntegers" Content="Integers" HorizontalAlignment="Left" Margin="942,47,0,0" VerticalAlignment="Top" Checked="RbIntegers_Checked"/>
-
+            HorizontalAlignment="Center" Margin="2,127,-0.4,0.4" Width="1912" Background="White"/>
+        <Button Content="RESET" HorizontalAlignment="Left" Margin="594,73,0,0" VerticalAlignment="Top" Width="100" Click="btnReset" BorderThickness="0" Background="#FFCAF1A4" FontSize="16" FontWeight="Bold">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <TextBox x:Name="tbMaticTree" HorizontalAlignment="Left" Height="37" Margin="10,33,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="507" BorderThickness="3" Background="White" BorderBrush="#FF3B4630" FontSize="16"/>
+        <Button x:Name="btnInsert" Content="INSERT" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="417,78,0,0" IsDefault="True" VerticalAlignment="Top" Width="100" Click="BtnMatic_Click" Height="23" BorderThickness="0" Background="#FFCAF1A4" FontWeight="Bold" FontSize="16">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="tbBalance" Content="BALANCE" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="594,15,0,0" VerticalAlignment="Top" Height="23" Width="100" Click="TbBalance_Click" Background="#FFCAF1A4" BorderThickness="0" FontSize="16" FontWeight="Bold">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="tbDelete" Content="DELETE" Height="23" HorizontalAlignment="Left" Margin="594,43,0,0" VerticalAlignment="Top" Width="100" Click="TbDelMerging_Click" Background="#FFCAF1A4" FontSize="16" FontWeight="Bold" BorderThickness="0">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <RadioButton x:Name="rbString" Content="STRING" HorizontalAlignment="Left" Margin="23,80,0,0" VerticalAlignment="Top" Width="98" Height="29" FontWeight="Bold" FontSize="16" Background="White" BorderBrush="Black"/>
+        <RadioButton x:Name="rbIntegers" Content="INTEGERS" HorizontalAlignment="Left" Margin="162,80,0,0" VerticalAlignment="Top" Width="122" Height="29" Background="White" Foreground="Black" FontWeight="Bold" FontSize="16" BorderBrush="Black"/>
+        <TextBlock x:Name="tbVisualizer" Text="BST VISUALIZER" HorizontalAlignment="Center" TextAlignment="Center" Margin="977,15,9.6,0" VerticalAlignment="Top" Height="127" FontWeight="Bold" FontSize="60" Foreground="#FF427D09" Width="927"/>
+        <Button x:Name="tbRelax" Content="RELAXING" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Margin="767,43,0,0" VerticalAlignment="Top" Width="100" Height="23" Background="#FFCAF1A4" FontSize="16" FontWeight="Bold" BorderThickness="0" Click="TbRelax_Click">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="tbCalm" Content="CALM" HorizontalAlignment="Left" HorizontalContentAlignment="Center" Margin="767,15,0,0" VerticalAlignment="Top" Width="100" Height="23" Background="#FFCAF1A4" FontSize="16" FontWeight="Bold" BorderThickness="0" Click="TbCalm_Click">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="tbHeadBang" Content="HEADBANG" HorizontalAlignment="Left" Margin="767,73,0,0" VerticalAlignment="Top" Width="100" Height="23" Background="#FFCAF1A4" FontSize="16" FontWeight="Bold" BorderThickness="0" Click="TbHeadBang_Click">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
+        <Button x:Name="tbStopMusic" Content="STOP MUSIC" HorizontalAlignment="Left" Margin="877,74,0,0" VerticalAlignment="Top" Width="100" Height="23" Background="#FFCAF1A4" FontSize="16" FontWeight="Bold" BorderThickness="0" Click="TbStopMusic_Click">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
     </Grid>
 </Window>

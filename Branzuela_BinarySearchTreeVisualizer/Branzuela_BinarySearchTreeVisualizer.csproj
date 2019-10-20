@@ -97,16 +97,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="arrow.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="leaf.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="root.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="dahon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

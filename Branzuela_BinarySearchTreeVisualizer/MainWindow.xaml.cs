@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Media;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Xml.Schema;
 
 namespace Branzuela_BinarySearchTreeVisualizer
 {
@@ -22,18 +15,63 @@ namespace Branzuela_BinarySearchTreeVisualizer
     public partial class MainWindow : Window
     {
         #region fields
-        BinaryTree<int> intTree = new BinaryTree<int>();
-        BinaryTree<string> stringTree = new BinaryTree<string>();
-        double BaseLeftMargin = 900;
-        double BaseRightMargin = 900;
-        double BaseTopMargin = 10;
-        double BaseBottomMargin = 440;
+        private SoundPlayer player = new SoundPlayer();
+        private BinaryTree<int> intTree = new BinaryTree<int>();
+        private BinaryTree<string> stringTree = new BinaryTree<string>();
+        private double BaseLeftMargin = 900;
+        private double BaseRightMargin = 900;
+        private double BaseTopMargin = 10;
+        private double BaseBottomMargin = 440;
         #endregion
 
         public MainWindow()
         {
             InitializeComponent();
+            #region color animation
+
+            //ColorAnimation blackToWhite = new ColorAnimation(Colors.SaddleBrown, Colors.LimeGreen, new Duration(new TimeSpan(1)));
+            //blackToWhite.AutoReverse = true;
+            //blackToWhite.RepeatBehavior = RepeatBehavior.Forever;
+            //SolidColorBrush scb = new SolidColorBrush(Colors.Black);
+            //scb.BeginAnimation(SolidColorBrush.ColorProperty, blackToWhite);
+            //TextEffect tfe = new TextEffect();
+            //tfe.Foreground = scb;
+            //// Range of text to apply effect to (all).
+            //tfe.PositionStart = 0;
+            //tfe.PositionCount = int.MaxValue;
+            //tbVisualizer.TextEffects.Add(tfe);
+            #endregion
+
         }
+
+        #region background music
+
+        public void Music(string musicType)
+        {
+            player = new SoundPlayer(musicType);
+            player.Play();
+        }
+
+        private void TbRelax_Click(object sender, RoutedEventArgs e)
+        {
+            Music(@"relax.wav");
+        }
+
+        private void TbCalm_Click(object sender, RoutedEventArgs e)
+        {
+            Music(@"calm1.wav");
+        }
+
+        private void TbHeadBang_Click(object sender, RoutedEventArgs e)
+        {
+            Music(@"headbang.wav");
+        }
+
+        private void TbStopMusic_Click(object sender, RoutedEventArgs e)
+        {
+            player.Stop();
+        }
+        #endregion
 
         #region Drawing
         private void Line(double xfrom, double yfrom, double xto, double yto)
@@ -52,7 +90,7 @@ namespace Branzuela_BinarySearchTreeVisualizer
             double left, double right, double top, double bot)
         {
             if (node == null) return;
-            int levelCounter=1;
+            int levelCounter = 1;
             if (node != intTree.Root) levelCounter = intTree.levelFromRootCounter(node); //solution para dili mag dikit2 ang nga node sa intTree
             var container = DrawLeaf(node.Data.ToString(), 30); //CHANGE RADIUS
             if (node == intTree.Root) container = DrawRoot(node.Data.ToString(), 30);
@@ -70,15 +108,25 @@ namespace Branzuela_BinarySearchTreeVisualizer
             #region set new measurements to left and right children of nodes
 
             var newLeftMarginTOP = top + 50;
-            var newLeftMarginLEFT = left - (30 * levelCounter);
-            var newLeftMarginRIGHT = right + (30 * levelCounter);
+            //var newLeftMarginLEFT = left - (30 * levelCounter);
+            var newLeftMarginLEFT = left - 70;
+            //var newLeftMarginRIGHT = right + (30 * levelCounter);
+            var newLeftMarginRIGHT = right + 70;
             var newLeftMarginBOT = bot - 50;
             var newRightMarginTOP = top + 50;
-            var newRightMarginLEFT = left + (30 * levelCounter);
-            var newRightMarginRIGHT = right - (30 * levelCounter);
+            //var newRightMarginLEFT = left + (30 * levelCounter);
+            var newRightMarginLEFT = left + 70;
+            //var newRightMarginRIGHT = right - (30 * levelCounter);
+            var newRightMarginRIGHT = right - 70;
             var newRightMarginBOT = bot - 50;
-
+            if (node == intTree.Root)
+            {
+                newRightMarginLEFT -= 100;
+                newLeftMarginLEFT -= 100;
+            }
             #endregion of current node
+
+
 
             #region RecycledBin
 
@@ -156,35 +204,56 @@ namespace Branzuela_BinarySearchTreeVisualizer
 
             #region solution para dili mag dikit2 sa visualizer ang mga node
 
-
-            if (intTree.NumberOfLeavesCounter(intTree.Root.Left) > 0 && intTree.NumberOfLeavesCounter(intTree.Root.Right) > 0) //naay sulod ang left and right sa root
-            {
-                if (node.Left != null && intTree.Compare(intTree.Root.Data, node.Left.Data) == 1) //kung ang node kay lesser than sa root
+            //if (intTree.NumberOfLeavesCounter(intTree.Root.Left) > 0 && intTree.NumberOfLeavesCounter(intTree.Root.Right) > 0) //naay sulod ang left and right sa root
+            //{
+            if (node.Left != null && intTree.Compare(intTree.Root.Data, node.Left.Data) == 1) //kung ang node kay lesser than sa root
                 { //sa left
-                    newLeftMarginLEFT -= (100 / (levelCounter));
-                    newRightMarginLEFT += (100 / (levelCounter));
+                    newLeftMarginTOP -= 20;
+                    newLeftMarginLEFT -= (50 / (levelCounter));
+                    newRightMarginLEFT += (200 / (levelCounter));
+                    if (intTree.GetParent(node, intTree.Root) != intTree.Root)
+                    {
+                        newLeftMarginTOP += 75;
+                        newRightMarginTOP += 75;
+                    }
+
+                    //newRightMarginLEFT += 150;
+                    //newRightMarginRIGHT -= (200/levelCounter);
+
+                    //newRightMarginTOP += (30*levelCounter);
                 }
 
-                if (node.Right != null && intTree.Compare(intTree.Root.Data, node.Right.Data) == -1)
+                if (node.Right != null && intTree.Compare(intTree.Root.Data, node.Right.Data) == -1)//kung ang node kay greater than sa root
                 {
+                    //newRightMarginLEFT += (100 / levelCounter);
+                    //newLeftMarginLEFT -= (100 / levelCounter);
+                    //newRightMarginTOP -= 20;
                     newRightMarginLEFT += (200 / levelCounter);
-                    newLeftMarginLEFT -= (100 / levelCounter);
+                    //newRightMarginLEFT += (100 / levelCounter);
+                    //newLeftMarginLEFT -= (100 / levelCounter);
+                    if (intTree.GetParent(node, intTree.Root) != intTree.Root)
+                    {
+                        newRightMarginTOP += 75;
+                        newLeftMarginTOP += 75;
+                    }
                 }
                 if (intTree.GetParent(node, intTree.Root).Left != null && intTree.GetParent(node, intTree.Root).Right != null) //if ang parent sa node kay naay duha ka anak
                 {
                     if (intTree.Compare(node.Data, intTree.GetParent(node, intTree.Root).Data) == 1) // mas dako ang node compared saiyahang parent
                     {
-                        newLeftMarginLEFT += (100 / levelCounter);
-                        newRightMarginLEFT -= (200 / levelCounter);
+                        newLeftMarginLEFT -= (100 / levelCounter);
+                        newRightMarginLEFT -= (100 / levelCounter);
                     }
+
                     if (intTree.Compare(node.Data, intTree.GetParent(node, intTree.Root).Data) == -1) // mas gamay ang node compared saiyahang parent
                     {
-                        newRightMarginLEFT += (100 / levelCounter);
-                        newLeftMarginLEFT -= (100 / levelCounter);
+                        newRightMarginLEFT -= (200 / levelCounter);
+                        newLeftMarginLEFT -= (200 / levelCounter);
                     }
                 }
-                newLeftMarginTOP += (30 * levelCounter);
-            }
+                newLeftMarginTOP += (20 * levelCounter);
+                newRightMarginTOP += (20 * levelCounter);
+            //}
             #endregion
 
             #region visualize children of nodes with matching lines to connect
@@ -217,48 +286,73 @@ namespace Branzuela_BinarySearchTreeVisualizer
 
             #region set new measurements to left and right children of nodes
 
-            var newLeftMarginTOP = top + 80;
-            var newLeftMarginLEFT = left - (30 * levelCounter);
-            var newLeftMarginRIGHT = right + (30 * levelCounter);
-            var newLeftMarginBOT = bot - 80;
-            var newRightMarginTOP = top + 80;
-            var newRightMarginLEFT = left + (30 * levelCounter);
-            var newRightMarginRIGHT = right - (30 * levelCounter);
-            var newRightMarginBOT = bot - 80;
-
+            var newLeftMarginTOP = top + 50;
+            var newLeftMarginLEFT = left - 70;
+            var newLeftMarginRIGHT = right + 70;
+            var newLeftMarginBOT = bot - 50;
+            var newRightMarginTOP = top + 50;
+            var newRightMarginLEFT = left + 70;
+            var newRightMarginRIGHT = right - 70;
+            var newRightMarginBOT = bot - 50;
+            if (node == stringTree.Root)
+            {
+                newRightMarginLEFT -= 100;
+                newLeftMarginLEFT -= 100;
+            }
             #endregion of current node
 
+
             #region solution para dili mag dikit2 sa visualizer ang mga node
-
-
-            if (stringTree.NumberOfLeavesCounter(stringTree.Root.Left) > 0 && stringTree.NumberOfLeavesCounter(stringTree.Root.Right) > 0) //naay sulod ang left and right sa root
-            {
-                if (node.Left != null && stringTree.Compare(stringTree.Root.Data, node.Left.Data) == 1) //kung ang node kay lesser than sa root
-                { //sa left
-                    newLeftMarginLEFT -= (100 / (levelCounter));
-                    newRightMarginLEFT += (100 / (levelCounter));
-                }
-
-                if (node.Right != null && stringTree.Compare(stringTree.Root.Data, node.Right.Data) == -1)
+            //if (intTree.NumberOfLeavesCounter(intTree.Root.Left) > 0 && intTree.NumberOfLeavesCounter(intTree.Root.Right) > 0) //naay sulod ang left and right sa root
+            //{
+            if (node.Left != null && stringTree.Compare(stringTree.Root.Data, node.Left.Data) == 1) //kung ang node kay lesser than sa root
+            { //sa left
+                newLeftMarginTOP -= 20;
+                newLeftMarginLEFT -= (50 / (levelCounter));
+                newRightMarginLEFT += (200 / (levelCounter));
+                if (stringTree.GetParent(node, stringTree.Root) != stringTree.Root)
                 {
-                    newRightMarginLEFT += (200 / levelCounter);
-                    newLeftMarginLEFT -= (100 / levelCounter);
+                    newLeftMarginTOP += 75;
+                    newRightMarginTOP += 75;
                 }
-                if (stringTree.GetParent(node, stringTree.Root).Left != null && stringTree.GetParent(node, stringTree.Root).Right != null) //if ang parent sa node kay naay duha ka anak
-                {
-                    if (stringTree.Compare(node.Data, stringTree.GetParent(node, stringTree.Root).Data) == 1) // mas dako ang node compared saiyahang parent
-                    {
-                        newLeftMarginLEFT += (100 / levelCounter);
-                        newRightMarginLEFT -= (200 / levelCounter);
-                    }
-                    if (stringTree.Compare(node.Data, stringTree.GetParent(node, stringTree.Root).Data) == -1) // mas gamay ang node compared saiyahang parent
-                    {
-                        newRightMarginLEFT += (100 / levelCounter);
-                        newLeftMarginLEFT -= (100 / levelCounter);
-                    }
-                }
-                newLeftMarginTOP += (30 * levelCounter);
+
+                //newRightMarginLEFT += 150;
+                //newRightMarginRIGHT -= (200/levelCounter);
+
+                //newRightMarginTOP += (30*levelCounter);
             }
+
+            if (node.Right != null && stringTree.Compare(stringTree.Root.Data, node.Right.Data) == -1)//kung ang node kay greater than sa root
+            {
+                //newRightMarginLEFT += (100 / levelCounter);
+                //newLeftMarginLEFT -= (100 / levelCounter);
+                //newRightMarginTOP -= 20;
+                newRightMarginLEFT += (200 / levelCounter);
+                //newRightMarginLEFT += (100 / levelCounter);
+                //newLeftMarginLEFT -= (100 / levelCounter);
+                if (stringTree.GetParent(node, stringTree.Root) != stringTree.Root)
+                {
+                    newRightMarginTOP += 75;
+                    newLeftMarginTOP += 75;
+                }
+            }
+            if (stringTree.GetParent(node, stringTree.Root).Left != null && stringTree.GetParent(node, stringTree.Root).Right != null) //if ang parent sa node kay naay duha ka anak
+            {
+                if (stringTree.Compare(node.Data, stringTree.GetParent(node, stringTree.Root).Data) == 1) // mas dako ang node compared saiyahang parent
+                {
+                    newLeftMarginLEFT -= (100 / levelCounter);
+                    newRightMarginLEFT -= (100 / levelCounter);
+                }
+
+                if (stringTree.Compare(node.Data, stringTree.GetParent(node, stringTree.Root).Data) == -1) // mas gamay ang node compared saiyahang parent
+                {
+                    newRightMarginLEFT -= (200 / levelCounter);
+                    newLeftMarginLEFT -= (200 / levelCounter);
+                }
+            }
+            newLeftMarginTOP += (20 * levelCounter);
+            newRightMarginTOP += (20 * levelCounter);
+            //}
             #endregion
 
             #region visualize children of nodes with matching lines to connect
@@ -273,17 +367,19 @@ namespace Branzuela_BinarySearchTreeVisualizer
         }
         private Canvas DrawLeaf(string content, double radius)
         {
+
             var tb = new TextBlock
             {
-                Width = radius * 3,
+                Width = radius * 4,
                 Height = radius * 2,
                 FontSize = 15,
                 FontWeight = FontWeights.UltraBold,
                 Foreground = Brushes.Black,
+                TextEffects = new TextEffectCollection(),
                 FontStretch = FontStretches.UltraExpanded,
                 TextAlignment = TextAlignment.Center
             };
-            tb.Text = content.ToString();
+            tb.Text = content.ToUpper();
             #region recycledBin
 
             //var circle = new Ellipse
@@ -317,7 +413,7 @@ namespace Branzuela_BinarySearchTreeVisualizer
         {
             var tb = new TextBlock
             {
-                Width = radius * 3,
+                Width = radius * 4,
                 Height = radius * 2,
                 FontSize = 15,
                 FontWeight = FontWeights.UltraBold,
@@ -325,7 +421,7 @@ namespace Branzuela_BinarySearchTreeVisualizer
                 FontStretch = FontStretches.UltraExpanded,
                 TextAlignment = TextAlignment.Center
             };
-            tb.Text = content;
+            tb.Text = content.ToUpper();
             var im = new Image()
             {
                 Source = new BitmapImage(new Uri(@"root.png", UriKind.Relative)),
@@ -343,82 +439,12 @@ namespace Branzuela_BinarySearchTreeVisualizer
             Canvas.SetLeft(tb, 0);
             return container;
         }
-
-        #endregion
-
-        #region Garbage pero basig magamit
-
-        //private void DrawLeaf(string content, double radius, double centerX, double centerY)
-        //{
-        //    intTree.Insert(content);
-        //    var container = DrawLeaf(content, radius);
-        //    cnvTree.Children.Add(container);
-        //    if (intTree.Root.Data == content) //if root
-        //    {
-        //        Canvas.SetTop(container, centerY - 250);
-        //        Canvas.SetLeft(container, centerX);
-        //    }
-        //    else if (intTree.Compare(intTree.Root.Data, content) == 1) //left side 
-        //    {
-        //        if (intTree.Compare(intTree.Root.Left.Data, content) == 0) //left directly from root
-        //        {
-        //            Canvas.SetTop(container, centerY - (centerY / 2));
-        //            Canvas.SetLeft(container, centerX - (centerX / 2));
-        //        }
-        //        else
-        //        {
-        //        }
-
-        //    }
-        //    else if (intTree.Compare(intTree.Root.Data, content) == -1) //right
-        //    {
-        //        Canvas.SetTop(container, centerY - (centerY / 2));
-        //        Canvas.SetLeft(container, centerX + (centerX / 2));
-        //    }
-        //}
-        //private void btnGenerate(object sender, RoutedEventArgs e)
-        //{
-        //    DrawLeaf(tbTreeContent.Text, 50, cnvTree.Width / 2, cnvTree.Height / 2);
-        //}
-        //private void DrawTreeWithoutAesthetic(BinaryTreeNode<string> node, int currentHeight, Thickness margin)
-        //{
-        //    if (node == null)
-        //    {
-        //        return;
-        //    }
-
-        //    Label label = new Label { Content = node.Data, Margin = margin, Width = 20 };
-
-        //    cnvTree.Children.Add(label);
-
-        //    Thickness newLeftMargin = new Thickness
-        //    {
-        //        Top = margin.Top + 50,
-        //        Left = margin.Left - 25,
-        //        Right = margin.Right + 25,
-        //        Bottom = margin.Bottom - 50
-        //    };
-
-        //    Thickness newRightMargin = new Thickness
-        //    {
-        //        Top = margin.Top + 50,
-        //        Left = margin.Left + 25,
-        //        Right = margin.Right - 25,
-        //        Bottom = margin.Bottom - 50
-        //    };
-
-        //    // Show children
-        //    DrawTreeWithoutAesthetic(node.Left, currentHeight + 1, newLeftMargin);
-        //    DrawTreeWithoutAesthetic(node.Right, currentHeight + 1, newRightMargin);
-        //}
-
-        #endregion
-
+#endregion
 
 
         private void btnReset(object sender, RoutedEventArgs e)
         {
-            #region reload used resources para virgin usab
+            #region reload used
             intTree = new BinaryTree<int>();
             stringTree = new BinaryTree<string>();
             rbIntegers.IsEnabled = true;
@@ -475,44 +501,100 @@ namespace Branzuela_BinarySearchTreeVisualizer
 
         private void TbBalance_Click(object sender, RoutedEventArgs e)
         {
-            //var queueInOrderNodes = intTree.InOrderTraversal();
-            //intTree.Clear();
-            //foreach (var queueInOrderNode in queueInOrderNodes) intTree.Insert(queueInOrderNode.Data);
-            //MessageBox.Show(intTree.buildTree(intTree.Root).Data);
-            //MessageBox.Show(intTree.buildTree(intTree.Root).Data);
-            cnvTree.Children.Clear();
-            //DrawTreeIntNode(intTree.Balance().Root, 0, BaseLeftMargin, BaseRightMargin,
-                //BaseTopMargin, BaseBottomMargin);
+            if (rbIntegers.IsChecked == true && intTree.NumberOfLeavesCounter(intTree.Root) > 2)
+            {
+                intTree.Root = intTree.Balance();
+                cnvTree.Children.Clear();
+                DrawTreeIntNode(intTree.Root, 0, BaseLeftMargin, BaseRightMargin,
+                    BaseTopMargin, BaseBottomMargin);
+            }
+
+            else if (rbString.IsChecked == true && stringTree.NumberOfLeavesCounter(stringTree.Root) > 2)
+            {
+                stringTree.Root = stringTree.Balance();
+                cnvTree.Children.Clear();
+                DrawTreeStringNode(stringTree.Root, 0, BaseLeftMargin, BaseRightMargin,
+                    BaseTopMargin, BaseBottomMargin);
+            }
+            else
+            {
+                MessageBox.Show("Insufficient amount of data.");
+                return;
+            }
+
+
 
         }
+
 
         private void TbDelMerging_Click(object sender, RoutedEventArgs e)
         {
-            //BinaryTreeNode<string> search = intTree.Search(tbMaticTree.Text); //tama ang getparent. naay mali sa deletemethod
-            var searched = intTree.Search(int.Parse(tbMaticTree.Text));
-            if (searched == null) return;
-            if (!intTree.HasTwoChildren(int.Parse(tbMaticTree.Text))) intTree.DeleteLessThanTwoNodes(int.Parse(tbMaticTree.Text));
-            //delete by merging
-            if (intTree.GetParent(searched,intTree.Root).Left != null && intTree.GetParent(searched,intTree.Root).Right != null) intTree.DeleteMerging(int.Parse(tbMaticTree.Text));
-            cnvTree.Children.Clear();
-            //MessageBox.Show(intTree.GetParent(search, intTree.Root).Data);
-            DrawTreeIntNode(intTree.Root, 0, BaseLeftMargin, BaseRightMargin,
-                BaseTopMargin, BaseBottomMargin);
+            #region merging
+            //if (rbIntegers.IsChecked == true)
+            //{
+            //    //BinaryTreeNode<string> search = intTree.Search(tbMaticTree.Text); //tama ang getparent. naay mali sa deletemethod
+            //    var searched = intTree.Search(int.Parse(tbMaticTree.Text));
+            //    if (searched == null) return;
+            //    if (!intTree.HasTwoChildren(int.Parse(tbMaticTree.Text))) intTree.DeleteLessThanTwoNodes(int.Parse(tbMaticTree.Text));
+            //    //delete by merging
+            //    var temp = intTree.GetParent(searched, intTree.Root);
+            //    if (temp.Left != null && temp.Right != null) intTree.DeleteMerging(int.Parse(tbMaticTree.Text));
+            //    cnvTree.Children.Clear();
+            //    //MessageBox.Show(intTree.GetParent(search, intTree.Root).Data);
+            //    DrawTreeIntNode(intTree.Root, 0, BaseLeftMargin, BaseRightMargin,
+            //        BaseTopMargin, BaseBottomMargin);
+            //}
+
+            //else if (rbString.IsChecked == true)
+            //{
+            //    var searched = stringTree.Search(tbMaticTree.Text);
+            //    if (searched == null) return;
+            //    if (!stringTree.HasTwoChildren(tbMaticTree.Text)) stringTree.DeleteLessThanTwoNodes(tbMaticTree.Text);
+            //    var temp = stringTree.GetParent(searched, stringTree.Root);
+            //    if (temp.Left != null && temp.Right != null) stringTree.DeleteMerging(tbMaticTree.Text);
+            //    cnvTree.Children.Clear();
+            //    DrawTreeStringNode(stringTree.Root, 0, BaseLeftMargin, BaseRightMargin,
+            //        BaseTopMargin, BaseBottomMargin);
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Please select data type and input data");
+            //}
+
+
+
+            #endregion
+
+            if (rbIntegers.IsChecked == true)
+            {
+                int n;
+                if (!int.TryParse(tbMaticTree.Text, out n) || intTree.Search(int.Parse(tbMaticTree.Text)) == null)
+                {
+                    MessageBox.Show("Data not found on tree.");
+                    return;
+                }
+                    
+
+                intTree.Delete(int.Parse(tbMaticTree.Text));
+                cnvTree.Children.Clear();
+                DrawTreeIntNode(intTree.Root, 0, BaseLeftMargin, BaseRightMargin,
+                    BaseTopMargin, BaseBottomMargin);
+            }
+
+            if (rbString.IsChecked == true)
+            {
+                if (stringTree.Search(tbMaticTree.Text) == null)
+                {
+                    MessageBox.Show("Data not found on tree");
+                    return;
+                }
+                stringTree.Delete(tbMaticTree.Text);
+                cnvTree.Children.Clear();
+                DrawTreeStringNode(stringTree.Root, 0, BaseLeftMargin, BaseRightMargin,
+                    BaseTopMargin, BaseBottomMargin);
+            }
+
         }
 
-        private void TbGetParent_Click(object sender, RoutedEventArgs e)
-        {
-            var searched = intTree.Search(int.Parse(tbMaticTree.Text));
-            MessageBox.Show(intTree.HasTwoChildren(int.Parse(tbMaticTree.Text)).ToString()); //tama na ang code sa number of leaves
-        }
-
-        private void RbString_Checked(object sender, RoutedEventArgs e)
-        {
-            //intTree = new BinaryTree<string>();
-        }
-
-        private void RbIntegers_Checked(object sender, RoutedEventArgs e)
-        {
-        } 
     }
 }

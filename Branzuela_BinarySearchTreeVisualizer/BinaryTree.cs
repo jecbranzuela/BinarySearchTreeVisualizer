@@ -12,6 +12,35 @@ namespace Branzuela_BinarySearchTreeVisualizer
         private readonly Queue<BinaryTreeNode<T>> _postOrderTraversalResult = new Queue<BinaryTreeNode<T>>();
         private readonly Queue<BinaryTreeNode<T>> _balancedBinaryTreeNodes = new Queue<BinaryTreeNode<T>>();
         public BinaryTreeNode<T> Root { get; set; }
+        public virtual BinaryTreeNode<T> BalanceHelper(List<BinaryTreeNode<T>> nodes, int start, int end)
+        {
+            // base case  
+            if (start > end)
+            {
+                return null;
+            }
+
+            /* Get the middle element and make it root */
+            int mid = (start + end) / 2;
+            BinaryTreeNode<T> node = nodes[mid];
+
+            /* Using index in Inorder traversal, construct  
+               left and right subtress */
+            node.Left = BalanceHelper(nodes, start, mid - 1);
+            node.Right = BalanceHelper(nodes, mid + 1, end);
+
+            return node;
+        }
+
+
+        public virtual BinaryTreeNode<T> Balance()
+        {
+            List<BinaryTreeNode<T>> inOrder = new List<BinaryTreeNode<T>>();
+            var q = InOrderTraversal();
+            foreach (var a in q) inOrder.Add(a);
+            int n = inOrder.Count;
+            return BalanceHelper(inOrder, 0, n - 1);
+        }
         public int NumberOfLeavesCounter(BinaryTreeNode<T> currentNode) //counts the number of nodes
         {
             if (currentNode == null) return 0; //walay sulod
@@ -26,12 +55,12 @@ namespace Branzuela_BinarySearchTreeVisualizer
             var currNode = Root;
             while (node != currNode)
             {
-                if (Compare(currNode.Data, node.Data) == 1) //greater than node data
+                if (Compare(currNode.Data, node.Data) == 1) //greater than node leafToDelete
                 {
                     currNode = currNode.Left;
                     levelCounter++;
                 }
-                else if (Compare(currNode.Data, node.Data) == -1) //lesser than node data
+                else if (Compare(currNode.Data, node.Data) == -1) //lesser than node leafToDelete
                 {
                     currNode = currNode.Right;
                     levelCounter++;
@@ -40,36 +69,47 @@ namespace Branzuela_BinarySearchTreeVisualizer
 
             return levelCounter;
         }
-
-        public bool HasTwoChildren(T leafToCheck)
+        public void Delete(T key)
         {
-            var searched = Search(leafToCheck);
-            return searched.Left != null && searched.Right != null;
+            Root = DeleteHelper(Root, key);
         }
-
-        public void DeleteLessThanTwoNodes(T leafToDelete)
+        BinaryTreeNode<T> DeleteHelper(BinaryTreeNode<T> root, T key)
         {
-            var searched = Search(leafToDelete);
-            if (searched.Left == null && searched.Right == null) //if terminating node
+            if (root == null) return root;
+
+
+            if (Compare(root.Data,key) == 1) //mas dako ang root
+                root.Left = DeleteHelper(root.Left, key);
+            else if (Compare(root.Data,key) == -1) //mas dako ang to be deleted
+                root.Right = DeleteHelper(root.Right, key);
+
+            else
             {
-                //mas dako ang node saiyahang parent
-                if (Compare(searched.Data, GetParent(searched, Root).Data) == 1) GetParent(searched, Root).Right = null;
-                else GetParent(searched, Root).Left = null;
+                // node with only one child or no child  
+                if (root.Left == null)
+                    return root.Right;
+                else if (root.Right == null)
+                    return root.Left;
+
+                // node with two children: Get the 
+                // inorder successor (smallest  
+                // in the right subtree)  
+                root.Data = minimumValue(root.Right);
+
+                // Delete the inorder successor  
+                root.Right = DeleteHelper(root.Right, root.Data);
             }
-            //naay left child
-            if (searched.Left != null && searched.Right == null)
+            return root;
+        }
+        T minimumValue(BinaryTreeNode<T> root)
+        {
+            T minv = root.Data;
+            while (root.Left != null)
             {
-                //if greater sa parent
-                if (Compare(searched.Data, GetParent(searched, Root).Data) == 1) GetParent(searched, Root).Right = searched.Left;
-                else GetParent(searched, Root).Left = searched.Left;
+                minv = root.Left.Data;
+                root = root.Left;
             }
-            //naay right child
-            if (searched.Left == null && searched.Right != null)
-            {
-                //if greater sa parent
-                if (Compare(searched.Data, GetParent(searched, Root).Data) == 1) GetParent(searched,Root).Right = searched.Right;
-                else GetParent(searched,Root).Left = searched.Right;
-            }
+            return minv;
         }
         public BinaryTreeNode<T> Search(T data, IComparer<T> comparer = null)
         {
@@ -215,93 +255,5 @@ namespace Branzuela_BinarySearchTreeVisualizer
             if (root.Right != null) result = toGetParent == root.Right ? root : GetParent(result, root.Right);
             return result;
         }
-        public void DeleteByCopying(T data)
-        {
-            var byeLeaf = Search(data);
-            if (byeLeaf == null) throw new Exception("Node not found in Tree");
-            var parentLeaf = GetParent(byeLeaf, Root);
-
-            var newLeaf = byeLeaf.Left; // left of byeleaf
-            var replacingLeaf = newLeaf;
-            var rightBranch = byeLeaf.Right;
-
-            //case: is leaf, left then right
-            if (newLeaf == null)
-            {
-                if (rightBranch == null)
-                {
-                    if (parentLeaf.Left == byeLeaf) parentLeaf.Left = null;
-                    else if (parentLeaf.Right == byeLeaf) parentLeaf.Right = null;
-                }
-                else
-                {
-                    parentLeaf.Right = rightBranch;
-                    if (parentLeaf == byeLeaf) Root = Root.Right;
-                }
-            }
-
-            //Find the replacing Leaf
-            while (replacingLeaf.Right != null)
-            {
-                replacingLeaf = replacingLeaf.Right;
-            }
-
-            //case: delete root
-            if (parentLeaf == byeLeaf)
-            {
-                Root.Data = replacingLeaf.Data;
-                if (replacingLeaf == newLeaf) Root.Left = newLeaf.Left;
-            }
-
-            //Specialcase: Replacingleaf is the left 
-            if (replacingLeaf == newLeaf)
-            {
-                if (parentLeaf.Left == byeLeaf) parentLeaf.Left = replacingLeaf;
-                else if (parentLeaf.Right == byeLeaf) parentLeaf.Right = replacingLeaf;
-
-                replacingLeaf.Right = rightBranch;
-            }
-
-            //Connects Children of replacing leaf to replacing leafs parent
-            if (replacingLeaf.Left != null) GetParent(replacingLeaf, Root).Right = replacingLeaf.Left;
-            else if (replacingLeaf.Left == null) GetParent(replacingLeaf, Root).Right = null;
-
-            if (parentLeaf.Left == byeLeaf) parentLeaf.Left.Data = replacingLeaf.Data;
-            else if (parentLeaf.Right == byeLeaf) parentLeaf.Right.Data = replacingLeaf.Data;
-        }
-
-        public void DeleteMerging(T leafToDelete)
-        {
-            var deleteLeaf = Search(leafToDelete);
-            if (deleteLeaf == null) return;
-            var parentOfLeafToBeDeleted = GetParent(deleteLeaf, Root);
-            var nLeaf = deleteLeaf.Left;
-            if (deleteLeaf == Root) //root ang idelete
-            {
-                if (Root.Left == null && Root.Right == null)
-                {
-                    Root = null;
-                    return;
-                }
-                parentOfLeafToBeDeleted = parentOfLeafToBeDeleted.Left;
-                Root = parentOfLeafToBeDeleted;
-            }
-            var rightLeaves = deleteLeaf.Right;
-            if (nLeaf == null) nLeaf = rightLeaves;
-            else
-            {
-                //pangitaon ang pinaka right node sa left subtree
-                var toConnect = nLeaf;
-                while (toConnect.Right != null) toConnect = toConnect.Right;
-
-                //iconnect ang right subtree ang rightmost node sa left subtree
-                toConnect.Right = rightLeaves;
-            }
-
-            if (parentOfLeafToBeDeleted == deleteLeaf) parentOfLeafToBeDeleted.Left = nLeaf;
-            else if (parentOfLeafToBeDeleted.Right == deleteLeaf) parentOfLeafToBeDeleted.Right = nLeaf;
-
-        }
-
     }
 }
